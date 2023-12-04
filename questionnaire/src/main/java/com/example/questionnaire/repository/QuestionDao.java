@@ -8,14 +8,20 @@ import org.springframework.stereotype.Repository;
 import com.example.questionnaire.entity.Question;
 import com.example.questionnaire.entity.QuestionId;
 
-//QuestionId   @Id使用兩個
 @Repository
-public interface QuestionDao extends JpaRepository<Question, QuestionId> {
+public interface QuestionDao extends JpaRepository<Question, QuestionId>{
 
-//	public void deleteAllByQnIdIn(int qnId, List<Integer> quIdList);
-	public void deleteAllByQnIdIn(List<Integer> qnIds);
+	public List<Question> deleteAllByQnIdIn(List<Integer> qnidList);
 
-	public List<Question> findByQuIdInAndQnId(List<Integer> IdList,int qnId);
-	public List<Question> findAllByQnIdIn(List<Integer> qnIdList);
+	public List<Question> findByQuIdInAndQnId(List<Integer> quid,int qnid);
+//	public List<Question> findAllByquizId(int quId);
 
+	public List<Question> deleteAllByQuIdInAndQnId(List<Integer> id,int qnid);
+	
+	public List<Question> findAllByQnIdIn(List<Integer> qnid);
+	
+	public List<Question> findAllByQnId(int id);
+
+
+	public boolean existsByQuId(int quId);
 }

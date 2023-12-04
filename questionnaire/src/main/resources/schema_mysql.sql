@@ -1,6 +1,6 @@
-CREATE TABLE IF NOT EXISTS `user` (
-  `name` varchar(45) DEFAULT NULL,
-  `phone_number` varchar(45) NOT NULL,
+CREATE TABLE IF NOT EXISTS `user1` (
+  `name` varchar(20) DEFAULT NULL,
+  `phone_number` varchar(20) NOT NULL,
   `email` varchar(45) DEFAULT NULL,
   `age` int DEFAULT '0',
   `qn_id` int NOT NULL,

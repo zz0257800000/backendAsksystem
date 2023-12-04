@@ -2,17 +2,29 @@ package com.example.questionnaire.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import javax.persistence.Version;
+
+//import com.example.demo.entity.MealId;
 
 @Entity
-@IdClass(value = QuestionId.class)
 @Table(name = "question")
+@IdClass(value = QuestionId.class)
 public class Question {
+	
+//	  @Version
+//	    @Column(name = "version")
+//	    private int version; // ª©¥»¸¹¦r¬q
+
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@Column(name = "id")
 	private int quId;
+	
 	@Id
 	@Column(name = "qn_id")
 	private int qnId;
@@ -20,61 +32,67 @@ public class Question {
 	@Column(name = "q_title")
 	private String qTitle;
 	
-	@Column(name = "option_type")
-	private String optiontype;
-	@Column(name = "is_necessary")
-	private String necessary;
-	@Column(name = "option")
-	private String option;
+	@Column(name = "options_type")
+	private String optionsType;
+	
+	
+	
+	@Column(name = "options")
+	private String options;
+
 	public Question() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-	public Question(int quId, int qnId, String qTitle, String optiontype, String necessary, String option) {
+
+	public Question(int quId, int qnId, String qTitle, String optionsType, String options) {
 		super();
 		this.quId = quId;
 		this.qnId = qnId;
 		this.qTitle = qTitle;
-		this.optiontype = optiontype;
-		this.necessary = necessary;
-		this.option = option;
+		this.optionsType = optionsType;
+		this.options = options;
 	}
+
 	public int getQuId() {
 		return quId;
 	}
+
 	public void setQuId(int quId) {
 		this.quId = quId;
 	}
-	public int getQnId() {
+
+	public int getqnId() {
 		return qnId;
 	}
-	public void setQnId(int qnId) {
+
+	public void setqnId(int qnId) {
 		this.qnId = qnId;
 	}
+
 	public String getqTitle() {
 		return qTitle;
 	}
+
 	public void setqTitle(String qTitle) {
 		this.qTitle = qTitle;
 	}
-	public String getOptiontype() {
-		return optiontype;
+
+	public String getOptionsType() {
+		return optionsType;
 	}
-	public void setOptiontype(String optiontype) {
-		this.optiontype = optiontype;
+
+	public void setOptionsType(String optionsType) {
+		this.optionsType = optionsType;
 	}
-	public String getNecessary() {
-		return necessary;
+
+	public String getOptions() {
+		return options;
 	}
-	public void setNecessary(String necessary) {
-		this.necessary = necessary;
+
+	public void setOptions(String options) {
+		this.options = options;
 	}
-	public String getOption() {
-		return option;
-	}
-	public void setOption(String option) {
-		this.option = option;
-	}
+
 	
 	
 	

@@ -9,79 +9,104 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
 
-@Table(name = "questionnaire")
+@Entity
+//(Table)名字要跟資料庫一樣
+@Table(name = "questionnaires")
 public class Questionnaire {
-	
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@Column(name = "id")
 	private int id;
-
+	
 	@Column(name = "title")
 	private String title;
 	
-	@Column(name = "description")
-	private String description;
 	@Column(name = "is_published")
 	private boolean published;
+	
+	@Column(name = "description")
+	private String description;
+
 	@Column(name = "start_date")
+	private LocalDate startDate;
 
-	private LocalDate startDate ;
 	@Column(name = "end_date")
+	private LocalDate endDate;
 
-	private LocalDate endDate ;
 	public Questionnaire() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Questionnaire(int id, String title, String description, boolean published, LocalDate startDate,
+		//沒兩個會報錯
+	public Questionnaire(int id,  String title,boolean published, String description, LocalDate startDate,
 			LocalDate endDate) {
 		super();
 		this.id = id;
 		this.title = title;
-		this.description = description;
 		this.published = published;
+		this.description = description;
+		this.startDate = startDate;
+		this.endDate = endDate;
+	}
+	public Questionnaire(  String title,boolean published, String description, LocalDate startDate,
+			LocalDate endDate) {
+		super();
+		this.title = title;
+		this.published = published;
+		this.description = description;
 		this.startDate = startDate;
 		this.endDate = endDate;
 	}
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+
 	public boolean isPublished() {
 		return published;
 	}
+
 	public void setPublished(boolean published) {
 		this.published = published;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public LocalDate getStartDate() {
 		return startDate;
 	}
+
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
+
 	public LocalDate getEndDate() {
 		return endDate;
 	}
+
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
+
 	
 	
 	

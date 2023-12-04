@@ -1,27 +1,51 @@
-package com.example.questionnaire.service.ifs;
+package com.example.questionnaire.Service.ifs;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+
 
 import com.example.questionnaire.vo.QuestionRes;
 import com.example.questionnaire.vo.QuestionnaireRes;
 import com.example.questionnaire.vo.QuizReq;
 import com.example.questionnaire.vo.QuizRes;
+import com.example.questionnaire.vo.QuizVo;
 
 public interface QuizService {
-
+	
 	public QuizRes create(QuizReq req);
 
-	public QuizRes update(QuizReq req);
+	public QuizRes create1(QuizReq req);
+	
+	public QuizRes createOrUpdate(QuizReq req);
+	
+	public QuizRes deleQuestionnaire(List<Integer> qnIdList);
 
-	public QuizRes deleteQuestionnaire(List<Integer> qnIdList);
+	public QuizRes deleQuestion(int qnid, List<Integer> quIdList);
+	
+	public QuizRes quizGetInfo(int id);
 
-	// 刪同張問卷有出現的ㄝ題目
-	public QuizRes deleteQuestion(int qnId, List<Integer> quIdList);
+	public QuizRes getQuizAns(int id);
 
-	public QuizRes search(String title, LocalDate startDate, LocalDate endDate);
+	public QuizRes createUser(QuizReq req);
 
-	public QuestionnaireRes searchQuestionnaireList(String title, LocalDate startDate, LocalDate endDate,boolean isPublished);
+	// 後臺搜尋
+	public QuizRes searchParam(String title, LocalDate startDate,LocalDate endDate);
+
+	// 前台的搜尋，只有已發布的才搜的到
+	public QuestionnaireRes searchQuestionnaireList(String title, LocalDate startDate,LocalDate endDate,boolean isPublished);
+
+	
 	public QuestionRes searchQuestionList(int qnId);
 
+	//
+	public QuizRes search(String title, LocalDate startDate, LocalDate endDate);
+
+
+
+
+
+
+	
+	
 }
