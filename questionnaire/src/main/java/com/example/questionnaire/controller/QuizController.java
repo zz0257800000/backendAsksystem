@@ -67,7 +67,7 @@ public class QuizController {
 	
 	@PostMapping(value = "api/quiz/usercreate")
 	public QuizRes usercreate(@RequestBody QuizReq req) {
-		return quizService.createUser(req);
+		return quizService.usercreate(req);
 		
 }
 	

@@ -22,7 +22,6 @@ public class User {
 	private int ansId;
 	
 	@Column(name = "quiz_id")
-	@JsonProperty("quiz_id")
 	private int quizId;
 	
 	@Column(name = "name")

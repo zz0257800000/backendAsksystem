@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-
 import com.example.questionnaire.vo.QuestionRes;
 import com.example.questionnaire.vo.QuestionnaireRes;
 import com.example.questionnaire.vo.QuizReq;
@@ -27,7 +26,7 @@ public interface QuizService {
 
 	public QuizRes getQuizAns(int id);
 
-	public QuizRes createUser(QuizReq req);
+	public QuizRes usercreate(QuizReq req);
 
 	// «á»O·j´M
 	public QuizRes searchParam(String title, LocalDate startDate,LocalDate endDate);
@@ -40,6 +39,7 @@ public interface QuizService {
 
 	//
 	public QuizRes search(String title, LocalDate startDate, LocalDate endDate);
+
 
 
 

@@ -11,6 +11,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -28,7 +30,7 @@ import com.example.questionnaire.vo.QuizReq;
 import com.example.questionnaire.vo.QuizRes;
 import com.example.questionnaire.vo.QuizVo;
 
-
+@EnableScheduling
 @Service
 public class QuizServiceImpl implements QuizService {
 
@@ -67,7 +69,6 @@ public class QuizServiceImpl implements QuizService {
 		quDao.saveAll(req.getQuestionList());
 		return new QuizRes(quizVoList, RtnCode.SUCCESSFUL);
 	}
-
 	@Override
 	public QuizRes create1(QuizReq req) {
 		Questionnaire qn = req.getQuestionnaire();
@@ -79,7 +80,6 @@ public class QuizServiceImpl implements QuizService {
 		quDao.saveAll(quList);
 		return new QuizRes(RtnCode.SUCCESSFUL);
 	}
-
 	// 把檢查方法拉出來用
 	private QuizRes checkParam(QuizReq req) {
 		Questionnaire qn = req.getQuestionnaire();
@@ -97,27 +97,43 @@ public class QuizServiceImpl implements QuizService {
 		// 傳null代表成功，沒有錯 成功什麼都不回傳
 		return null;
 	}
+	//更改問卷有問題
 
 	@Transactional
 	@Override
 	public QuizRes createOrUpdate(QuizReq req) {
-	   
-		 Questionnaire questionnaire = req.getQuestionnaire();
-		    List<Question> questionList = req.getQuestionList();
-		    Optional<Questionnaire> qnop = qnDao.findById(req.getQuestionnaire().getId());
-		    // 如果找不到对应ID的问卷，返回问卷ID未找到的错误码
-		    if (qnop.isEmpty()) {
-		        return new QuizRes(RtnCode.QNID_ERROR);
-		    }
+	    Questionnaire questionnaire = req.getQuestionnaire();
+	    List<Question> questionList = req.getQuestionList();
+	    
+	    // 從資料庫擷取現有的問卷
+	    Optional<Questionnaire> qnop = qnDao.findById(req.getQuestionnaire().getId());
 
-		    Questionnaire qn = qnop.get();
+	    if (qnop.isPresent()) {
+	        Questionnaire existingQuestionnaire = qnop.get();
+	        
+	        // 更新現有問卷的內容
+	        existingQuestionnaire.setTitle(questionnaire.getTitle());
+	        existingQuestionnaire.setDescription(questionnaire.getDescription());
+	        existingQuestionnaire.setStartDate(questionnaire.getStartDate());
+	        existingQuestionnaire.setEndDate(questionnaire.getEndDate());
+	        existingQuestionnaire.setPublished(questionnaire.isPublished());
+	        // 根據需要更新其他欄位
 
-		    	qnDao.save(questionnaire);  // Use save for a single entity
-		        quDao.saveAll(questionList);    // Use saveAll for a collection of entities
-		     
+	        // 將更新後的問卷再次保存到資料庫
+	        qnDao.save(existingQuestionnaire);
 
-		    return new QuizRes(RtnCode.UPDATE_ERROR);
-		}
+	        // 保存問題的列表
+	        // 更新问题列表
+	      
+
+	        quDao.saveAll(questionList);
+
+	        return new QuizRes(RtnCode.SUCCESSFUL);
+	    } else {
+	        // 如果找不到問卷ID，則返回錯誤碼
+	        return new QuizRes(RtnCode.QNID_ERROR);
+	    }
+	}
 
 	// 檢查問卷是否可編輯
 	private boolean isEditable(Questionnaire questionnaire) {
@@ -132,32 +148,26 @@ public class QuizServiceImpl implements QuizService {
 			return new QuizRes(RtnCode.ID_ERROR);
 		}
 		// 判斷QuestionList裡的quid是否等於Questionnaire裡的id
-
 		List<Question> quList = req.getQuestionList();
 		for (Question qu : quList) {
 			if (qu.getqnId() != req.getQuestionnaire().getId()) {
 				return new QuizRes(RtnCode.ID_ERROR);
 			}
 		}
-
 		return new QuizRes(RtnCode.SUCCESSFUL);
-	
 	}
-
 	@Transactional
 	@Override
 	public QuizRes deleQuestionnaire(List<Integer> qnIdList) {
 	    // 刪除多張問卷，無論是否已發布，只要問卷開始日期尚未過期就可以刪除
 	    List<Questionnaire> resList = qnDao.findByIdIn(qnIdList);
 	    List<Integer> deleList = new ArrayList<>();
-
 	    for (Questionnaire qn : resList) {
 	        // 可以刪除的條件為問卷尚未過期
 	        if (LocalDate.now().isBefore(qn.getEndDate())) {
 	            deleList.add(qn.getId());
 	        }
 	    }
-
 	    if (!deleList.isEmpty()) {
 	        // 刪除問卷
 	        qnDao.deleteAllById(deleList);
@@ -171,8 +181,6 @@ public class QuizServiceImpl implements QuizService {
 	        return new QuizRes(RtnCode.ID_NOTFOUNT);
 	    }
 	}
-
-
 	@Transactional
 	@Override
 	public QuizRes deleQuestion(int qnid, List<Integer> quIdList) {
@@ -211,9 +219,7 @@ public class QuizServiceImpl implements QuizService {
 		 * null) { startDate = LocalDate.of(1971, 1, 1); } if(endDate == null) { endDate
 		 * = LocalDate.of(2099, 12, 31); }
 		 */
-
 		// 例：先找到第1、4、9張問卷，再找1、4、9張問卷裡的題目，並配對
-
 		// 找到1 4 9 張問卷
 		List<Questionnaire> qnList = qnDao
 				.findByTitleContainingAndStartDateGreaterThanEqualAndEndDateLessThanEqual(title, startDate, endDate);
@@ -222,10 +228,8 @@ public class QuizServiceImpl implements QuizService {
 		for (Questionnaire qn : qnList) {
 			qnIdList.add(qn.getId());
 		}
-
 		// 找到 1 4 9 張問卷裡的題目
 		List<Question> quList = quDao.findAllByQnIdIn(qnIdList);
-
 		// 配對問卷跟題目到 VO vo裡包一張問卷QN 和該問卷的多個題目list<QU>
 		// for迴圈一張一張問卷，裡再for迴圈對應問卷的題目，用set放問卷題目
 		// 找到的資料需要有個東西來裝，不管是問卷還是題目
@@ -244,10 +248,8 @@ public class QuizServiceImpl implements QuizService {
 			vo.setQuestionList(quesList); // 接題目
 			quizVoList.add(vo); // 將題目和問卷存到VO
 		}
-
 		return new QuizRes(quizVoList, RtnCode.SUCCESSFUL);
 	}
-
 	@Override
 	public QuestionnaireRes searchQuestionnaireList(String title, LocalDate startDate, LocalDate endDate,
 			boolean isAll) {
@@ -263,23 +265,18 @@ public class QuizServiceImpl implements QuizService {
 			qnList = qnDao.findByTitleContainingAndStartDateGreaterThanEqualAndEndDateLessThanEqual(title, startDate,
 					endDate);
 		}
-
 		return new QuestionnaireRes(qnList, RtnCode.SUCCESSFUL);
 	}
-
 	@Override
 	public QuestionRes searchQuestionList(int qnId) {
 		if (qnId <= 0) {
 			return new QuestionRes(null, RtnCode.QNPARAM_ERROR);
 		}
 		List<Question> quList = quDao.findAllByQnIdIn(Arrays.asList(qnId));
-
 		return new QuestionRes(quList, RtnCode.SUCCESSFUL);
 	}
-
 	@Override
 	public QuizRes search(String title, LocalDate startDate, LocalDate endDate) {
-
 		title = StringUtils.hasText(title) ? title : "";
 		startDate = startDate != null ? startDate : LocalDate.of(1971, 1, 1);
 		endDate = endDate != null ? endDate : LocalDate.of(2099, 12, 31);
@@ -289,9 +286,7 @@ public class QuizServiceImpl implements QuizService {
 		 * null) { startDate = LocalDate.of(1971, 1, 1); } if(endDate == null) { endDate
 		 * = LocalDate.of(2099, 12, 31); }
 		 */
-
 		// 例：先找到第1、4、9張問卷，再找1、4、9張問卷裡的題目，並配對
-
 		// 找到1 4 9 張問卷
 		List<Questionnaire> qnList = qnDao
 				.findByTitleContainingAndStartDateGreaterThanEqualAndEndDateLessThanEqual(title, startDate, endDate);
@@ -300,10 +295,8 @@ public class QuizServiceImpl implements QuizService {
 		for (Questionnaire qn : qnList) {
 			qnIdList.add(qn.getId());
 		}
-
 		// 找到 1 4 9 張問卷裡的題目
 		List<Question> quList = quDao.findAllByQnIdIn(qnIdList);
-
 		// 配對問卷跟題目到 VO vo裡包一張問卷QN 和該問卷的多個題目list<QU>
 		// for迴圈一張一張問卷，裡再for迴圈對應問卷的題目，用set放問卷題目
 		// 找到的資料需要有個東西來裝，不管是問卷還是題目
@@ -322,12 +315,8 @@ public class QuizServiceImpl implements QuizService {
 			vo.setQuestionList(quesList); // 接題目
 			quizVoList.add(vo); // 將題目和問卷存到VO
 		}
-
 		return new QuizRes(quizVoList, RtnCode.SUCCESSFUL);
 	}
-
-	
-
 	@Override
 	public QuizRes quizGetInfo(int id) {
 
@@ -342,17 +331,13 @@ public class QuizServiceImpl implements QuizService {
 		for (Question q : questionList) {
 			System.out.println("問題: " + q.getqTitle());
 		}
-
 		// 依照指定qid搜尋底下所有問題
 		List<User> userList = userDao.findAllByquizId(id);
 		for (User u : userList) {
 			System.out.println("答案: " + u.getName());
 		}
-
 		QuizVo quizVo = new QuizVo(questionnaire.get(), questionList, userList);
-
 		return new QuizRes(quizVo, RtnCode.SUCCESSFUL);
-
 	}
 	@Override
 	public QuizRes getQuizAns(int quId) {
@@ -360,53 +345,49 @@ public class QuizServiceImpl implements QuizService {
 	    if (!quDao.existsByQuId(quId)) {
 	        return new QuizRes(RtnCode.ID_NOTFOUNT);
 	    }
-
 	    // 找出对应quizId的用户答案
 	    List<User> userList = userDao.findAllByquizId(quId);
-
 	    // 返回成功的响应，携带用户填写数据列表
 	    return new QuizRes(RtnCode.SUCCESSFUL);
 	}
 	
+	
+	//填問卷有問題
 	@Transactional
 	@Override
-	public QuizRes createUser(QuizReq req) {
+	public QuizRes usercreate(QuizReq req) {
 		
-		 // 步驟 1：驗證參數
 	    if (req == null || req.getUserList() == null) {
 	        return new QuizRes(RtnCode.SUCCESSFUL);
 	    }
-	    // 步驟 2：檢查問卷是否存在
-
-        // 如果前端未传递问卷ID，则返回错误
-	    Questionnaire questionnaire = req.getQuestionnaire();
-	    if (questionnaire == null) {
-	        // 如果前端未传递问卷ID，则返回错误
-	        return new QuizRes(RtnCode.QNPARAM_ERROR);
-	    }
-	    // 使用前端传递的问卷ID
-
-	    int qnid = questionnaire.getId();
-
-		System.out.println("Generated qnid: " + qnid);
-
 	  
 	    List<User> userList = req.getUserList();
 	    for (User user : userList) {
 	      
 
-	        // 設置問卷 ID
-	        user.setQuizId(qnid);
-	        System.out.println("Setting quizId for user: " + user.getQuizId());
-
-	        // 設置填寫資料的其他屬性
 	        user.setDateTime(LocalDateTime.now());
 	        // 儲存使用者到數據庫
 	        userDao.save(user);
 	    }
 
-	    // 步驟 7：返回結果
-	    QuizVo quizVo = new QuizVo(questionnaire, req.getQuestionList(), userList);
-	    return new QuizRes(quizVo, RtnCode.SUCCESSFUL);		
+	    
+	    return new QuizRes( RtnCode.SUCCESSFUL);		
 	}	
+	//				  秒 分 時 日 月 週
+//	@Scheduled(cron = "0/5 * 14 * * * ")
+//	public void schedule() {
+//		
+//		System.out.println(LocalDateTime.now());
+//	}
+//	@Scheduled(cron = "0 * 15 * * * ")
+//	public void updateOnschedule() {
+//		LocalDate today =LocalDate.now();
+//		int res = qnDao.
+//
+//		System.out.println(res);
+//
+//		System.out.println(today);
+//	}
+
+	
 }

@@ -541,7 +541,7 @@ public class QuizServiceTest {
 		 
 	 }
 	  @Test
-	    public void testCreateUser() {
+	    public void testusercreate() {
 	        // 創建測試所需的資料
 	        Questionnaire questionnaire = new Questionnaire();
 	        List<Question> questionList = new ArrayList<>();
@@ -561,7 +561,7 @@ public class QuizServiceTest {
 	        QuizReq quizReq = new QuizReq(questionnaire, questionList, userList);
 
 	        // 呼叫被測試的方法
-	        QuizRes result = quizService.createUser(quizReq);
+	        QuizRes result = quizService.usercreate(quizReq);
 
 	        // 驗證結果
 	        assertEquals(RtnCode.SUCCESSFUL, result.getRtnCode());
