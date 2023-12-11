@@ -532,7 +532,7 @@ public class QuizServiceTest {
 
 	@Test
 	public void getAnsTest() {
-		 quizService.quizGetInfo(375);
+		 quizService.quizGetInfo(8);
 	}
 
 	 @Test
@@ -540,36 +540,55 @@ public class QuizServiceTest {
 		 quizService.getQuizAns(375);
 		 
 	 }
-	  @Test
-	    public void testusercreate() {
-	        // 創建測試所需的資料
-	        Questionnaire questionnaire = new Questionnaire();
-	        List<Question> questionList = new ArrayList<>();
-	        User user = new User();
-	        user.setAnsId(2);
-	        user.setQuizId(526);
-	        user.setName("kon ");
-	        user.setPhoneNumber("05678900");
-	        user.setEmail("in.doe@example.comm");
-	        user.setAns("正常人;精灵弓手;附魔猫头鹰;魔法法杖");
+	 @Test
+	 public void testUserCreate() {
+	     // 創建測試所需的資料
+	     Questionnaire questionnaire = new Questionnaire();
+	     List<Question> questionList = new ArrayList<>();
+	     
+	     // 使用者填寫第一次回答
+	     User ans1 = new User();
+	     ans1.setAnsId(95);
+	     ans1.setQuizId(26);
+	     ans1.setName("Liao");
+	     ans1.setPhoneNumber("05678900");
+	     ans1.setEmail("in.doe@example.comm");
+	     ans1.setAns("贫富差距;环境问题");
+	     ans1.setDateTime(LocalDateTime.now());
 
-	        user.setDateTime(LocalDateTime.parse("2023-12-05T00:00:00"));
+	     // 使用者填寫第二次回答
+	     User ans2 = new User();
+	     ans2.setAnsId(96);
+	     ans2.setQuizId(26); // 使用相同的 quizId，表示是同一張問卷
+	     ans2.setName("Liao"); // 使用相同的姓名，表示是同一使用者
+	     ans2.setPhoneNumber("05678900");
+	     ans2.setEmail("in.doe@example.comm");
+	     ans2.setAns("非常安全");
+	     ans2.setDateTime(LocalDateTime.now());
 
-	        List<User> userList = Collections.singletonList(user);
+	     // 使用者填寫第三次回答
+	     User ans3 = new User();
+	     ans3.setAnsId(97);
+	     ans3.setQuizId(26); // 使用相同的 quizId，表示是同一張問卷
+	     ans3.setName("Liao"); // 使用相同的姓名，表示是同一使用者
+	     ans3.setPhoneNumber("05678900");
+	     ans3.setEmail("in.doe@example.comm");
+	     ans3.setAns("這是一個 text 回答");
+	     ans3.setDateTime(LocalDateTime.now());
 
-	        // 創建測試用的 QuizReq 物件
-	        QuizReq quizReq = new QuizReq(questionnaire, questionList, userList);
+	     List<User> userList = Arrays.asList(ans1, ans2, ans3);
 
-	        // 呼叫被測試的方法
-	        QuizRes result = quizService.usercreate(quizReq);
+	     // 創建測試用的 QuizReq 物件
+	     QuizReq quizReq = new QuizReq(questionnaire, questionList, userList);
 
-	        // 驗證結果
-	        assertEquals(RtnCode.SUCCESSFUL, result.getRtnCode());
-	        // ...
+	     // 呼叫被測試的方法
+	     QuizRes result = quizService.usercreate(quizReq);
 
-	        // 如果有需要，您可以進一步檢查返回的 QuizRes 物件中的其他屬性
-	        // ...
-	    }
+	     // 驗證結果
+	     assertEquals(RtnCode.SUCCESSFUL, result.getRtnCode());
+	     // ...
 
-	       
+	     // 如果有需要，您可以進一步檢查返回的 QuizRes 物件中的其他屬性
+	     // ...
+	 }
 }
