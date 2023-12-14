@@ -17,9 +17,9 @@ public class User {
 
 	@Id
 
-	@Column(name = "ans_id")
+	@Column(name = "userlist_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int ansId;
+	private int userlistId;
 	
 	@Column(name = "quiz_id")
 	private int quizId;
@@ -34,8 +34,6 @@ public class User {
 	@Column(name = "email")
 	private String email;
 
-	@Column(name = "ans")
-	private String ans;
 
 	@Column(name = "date_time")
 	@JsonProperty("date_time")
@@ -46,24 +44,22 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(int ansId, int quizId, String name, String phoneNumber, String email, String ans,
-			LocalDateTime dateTime) {
+	public User(int userlistId, int quizId, String name, String phoneNumber, String email, LocalDateTime dateTime) {
 		super();
-		this.ansId = ansId;
+		this.userlistId = userlistId;
 		this.quizId = quizId;
 		this.name = name;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		this.ans = ans;
 		this.dateTime = dateTime;
 	}
 
-	public int getAnsId() {
-		return ansId;
+	public int getUserlistId() {
+		return userlistId;
 	}
 
-	public void setAnsId(int ansId) {
-		this.ansId = ansId;
+	public void setUserlistId(int userlistId) {
+		this.userlistId = userlistId;
 	}
 
 	public int getQuizId() {
@@ -98,14 +94,6 @@ public class User {
 		this.email = email;
 	}
 
-	public String getAns() {
-		return ans;
-	}
-
-	public void setAns(String ans) {
-		this.ans = ans;
-	}
-
 	public LocalDateTime getDateTime() {
 		return dateTime;
 	}
@@ -113,6 +101,8 @@ public class User {
 	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
 	}
+
+	
 
 	
 }

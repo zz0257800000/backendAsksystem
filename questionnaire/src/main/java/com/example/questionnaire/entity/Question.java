@@ -15,12 +15,7 @@ import javax.persistence.Version;
 @Table(name = "question")
 @IdClass(value = QuestionId.class)
 public class Question {
-	
-//	  @Version
-//	    @Column(name = "version")
-//	    private int version; // ª©¥»¸¹¦r¬q
 
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
 	@Column(name = "id")
 	private int quId;

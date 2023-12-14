@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.questionnaire.Service.ifs.QuizService;
+import com.example.questionnaire.entity.User;
+import com.example.questionnaire.entity.UserAnswer;
 import com.example.questionnaire.vo.QuizReq;
 import com.example.questionnaire.vo.QuizRes;
+import com.example.questionnaire.vo.UserReq;
 
 @RestController
 @CrossOrigin
@@ -49,27 +52,27 @@ public class QuizController {
 	public QuizRes delete(@RequestBody List<Integer> qnIdList) {
 		return quizService.deleQuestionnaire(qnIdList);
 	}
-	//做統計用
-	@GetMapping(value = "api/quiz/userget")
-	public QuizRes userget(@RequestParam int id) {
-		return quizService.quizGetInfo(id);
+
+	@PostMapping(value = "api/quiz/createUserInfo")
+	public QuizRes createUserInfo(
+			@RequestBody UserReq userReq
+			              ) {
+		return quizService.createUserInfo(userReq);
+
 	}
-	//使用者寫填寫個人資料還有填寫問卷的回答問題
+
 	
-	@GetMapping(value = "api/quiz/user/answer")
-	public QuizRes getQuizAns(@RequestParam int id) {
-		return quizService.getQuizAns(id);
+
+	// 資料回前端資料顯示
+	@GetMapping(value = "api/quiz/user/showInfo")
+	public QuizRes showInfo(@RequestParam int id) {
+		return quizService.showInfo(id);
 	}
-	
-	
-	
-	
-	//
-	@PostMapping(value = "api/quiz/usercreate")
-	public QuizRes usercreate(@RequestBody QuizReq req) {
-		return quizService.usercreate(req);
-		
-}
-	
+
+	// 資料回前端做統計用
+	@GetMapping(value = "api/quiz/user/showAnswer")
+	public List<UserAnswer>  showAnswer(@RequestParam int quizId) {
+		return quizService.showAnswer(quizId);
+	}
 	
 }

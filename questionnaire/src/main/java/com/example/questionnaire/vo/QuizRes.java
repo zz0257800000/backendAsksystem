@@ -11,6 +11,9 @@ public class QuizRes {
 	
 	private QuizVo quizVo;
 	
+	
+	private UserReq userReq;
+
 	private RtnCode rtnCode;
 
 	
@@ -64,6 +67,26 @@ public class QuizRes {
 	public void setQuizVo(QuizVo quizVo) {
 		this.quizVo = quizVo;
 	}
+
+
+	public QuizRes(UserReq userReq, RtnCode rtnCode) {
+		super();
+		this.userReq = userReq;
+		this.rtnCode = rtnCode;
+	}
+
+
+	public UserReq getUserReq() {
+		return userReq;
+	}
+
+
+	public void setUserReq(UserReq userReq) {
+		this.userReq = userReq;
+	}
+
+
+
 
 	
 

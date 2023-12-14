@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.questionnaire.entity.User;
 
 @Repository
-public interface UserDao extends JpaRepository<User, String> {
+public interface UserDao extends JpaRepository<User, Integer> {
 	public List<User> findAllByquizId(int id);
 	  boolean existsByName(String name);
 
