@@ -36,7 +36,9 @@ public class QuizController {
 	}
 
 	@GetMapping(value = "api/quiz/searchParam")
-	public QuizRes searchParam(@RequestParam(value = "title", required = false) String title,
+	public QuizRes searchParam(
+			
+			@RequestParam(value = "title", required = false) String title,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "startDate", required = false) LocalDate startDate,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(name = "endDate", required = false) LocalDate endDate) {
 
@@ -60,8 +62,6 @@ public class QuizController {
 		return quizService.createUserInfo(userReq);
 
 	}
-
-	
 
 	// 資料回前端資料顯示
 	@GetMapping(value = "api/quiz/user/showInfo")
