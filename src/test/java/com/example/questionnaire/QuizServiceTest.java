@@ -142,9 +142,9 @@ public class QuizServiceTest {
 
 	    // 更新问题列表的属性
 	    List<Question> newQuestionList = Arrays.asList(
-	            new Question(1, 29, "早餐", "radio", "漢堡;三明治;饅頭"),
-	            new Question(2, 29, "午餐", "checkbox", "大腸麵線;老同學;一品屋"),
-	            new Question(3, 29, "晚餐", "text", "")
+	            new Question(1, 30, "早餐", "radio", "漢堡;三明治;饅頭"),
+	            new Question(2, 30, "午餐", "checkbox", "大腸麵線;老同學;一品屋"),
+	            new Question(3, 30, "晚餐", "text", "")
 	    );
 
 	    // 使用更新后的问卷和问题列表再次调用 createOrUpdate 方法
